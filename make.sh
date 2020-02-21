@@ -831,7 +831,7 @@ select_toolchain
 select_chip_info
 fixup_platform_configure
 sub_commands
-make CROSS_COMPILE=${TOOLCHAIN_GCC}  all --jobs=${JOB} ${OUTOPT}
+make CROSS_COMPILE=${TOOLCHAIN_GCC} u-boot.bin --jobs=${JOB} ${OUTOPT}
 pack_uboot_image
 pack_loader_image
 pack_trust_image
