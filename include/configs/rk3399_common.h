@@ -95,7 +95,7 @@
 	"fdtbin=/modduox-gr-rk3399.dtb\0" \
 	"boot_image=booti ${kernel_addr_r} - ${fdt_addr_r}\0" \
 	"setbootargs=setenv bootargs console=${console} init=/sbin/init root=${root} loglevel=${loglevel} ${extraargs}\0" \
-	"main_bootargs=setenv root \"/dev/mmcblk1p4\"\0" \
+	"main_bootargs=setenv root \"/dev/mmcblk0p4\"\0" \
 	"main_loadbootenv=ext4load mmc 0:4 ${scriptaddr} /boot${bootenv}; env import ${scriptaddr} ${filesize}\0" \
 	"main_script=ext4load mmc 0:4 ${fdt_addr_r} /boot${fdtbin}\0" \
 	"main_kernel=ext4load mmc 0:4 ${kernel_addr_r} /boot${kernel}\0" \
