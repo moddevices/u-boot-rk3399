@@ -86,3 +86,7 @@ GTAGS
 *.orig
 *~
 \#*#
+
+# MOD files
+arch/arm/dts/px30-dwarf.dts
+arch/arm/dts/rk3399-duox.dts
