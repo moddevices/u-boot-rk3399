@@ -88,7 +88,7 @@
 	"kernel_addr_r=0x00280000\0" \
 	"bootdelay=1\0" \
 	"bootcmd=run boot_main; run boot_restore; rockusb 0 mmc 0\0" \
-	"console=ttyFIQ0,1500000n8\0" \
+	"console=ttyFIQ0,115200n8\0" \
 	"loglevel=8\0" \
 	"bootenv=/uEnv-gr-rk3399.txt\0" \
 	"kernel=/Image-gr-rk3399\0" \
