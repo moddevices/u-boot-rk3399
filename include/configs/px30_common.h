@@ -92,11 +92,11 @@
 	"kernel_addr_r=0x00280000\0" \
 	"bootdelay=1\0" \
 	"bootcmd=run boot_main; run boot_restore; rockusb 0 mmc 0\0" \
-	"console=ttyFIQ0,115200n8\0" \
+	"console=ttyS2,115200n8\0" \
 	"loglevel=8\0" \
 	"bootenv=/uEnv-gr-px30.txt\0" \
 	"kernel=/Image-gr-px30\0" \
-	"fdtbin=/modduox-gr-px30.dtb\0" \
+	"fdtbin=/moddwarf-gr-px30.dtb\0" \
 	"boot_image=booti ${kernel_addr_r} - ${fdt_addr_r}\0" \
 	"setbootargs=setenv bootargs console=${console} init=/sbin/init root=${root} loglevel=${loglevel} ${extraargs}\0" \
 	"main_bootargs=setenv root \"/dev/mmcblk0p4\"\0" \
