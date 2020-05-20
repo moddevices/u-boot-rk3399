@@ -87,7 +87,7 @@
 	"fdt_addr_r=0x08300000\0" \
 	"kernel_addr_r=0x00280000\0" \
 	"bootdelay=1\0" \
-	"bootcmd=run boot_main; run boot_restore; rockusb 0 mmc 0\0" \
+	"bootcmd=run boot_main; run boot_restore; run boot_maskrom\0" \
 	"console=ttyS2,115200n8\0" \
 	"loglevel=8\0" \
 	"bootenv=/uEnv-gr-rk3399.txt\0" \
@@ -105,6 +105,7 @@
 	"restore_script=fatload mmc 0:3 ${fdt_addr_r} ${fdtbin}\0" \
 	"restore_kernel=fatload mmc 0:3 ${kernel_addr_r} ${kernel}\0" \
 	"boot_restore=run restore_bootargs restore_loadbootenv restore_script restore_kernel setbootargs boot_image\0" \
+	"boot_maskrom=echo hmi:maskrom mode active; echo hmi:maskrom mode active; rockusb 0 mmc 0\0" \
 	"loadbootenv=echo\0"
 
 #endif
