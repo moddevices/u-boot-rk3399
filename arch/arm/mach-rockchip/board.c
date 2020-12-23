@@ -229,7 +229,6 @@ int board_late_init(void)
 #ifdef CONFIG_DRM_ROCKCHIP
 	rockchip_show_logo();
 #endif
-	soc_clk_dump();
 	cmdline_handle();
 
 	return rk_board_late_init();

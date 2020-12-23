@@ -444,7 +444,6 @@ static int initr_mmc(void)
  * When CONFIG_USING_KERNEL_DTB is enabled, mmc has been initialized earlier.
  */
 #ifndef CONFIG_USING_KERNEL_DTB
-	puts("MMC:   ");
 	mmc_initialize(gd->bd);
 #endif
 	return 0;

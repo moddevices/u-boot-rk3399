@@ -648,12 +648,6 @@ static int setup_reloc(void)
 #endif
 	memcpy(gd->new_gd, (char *)gd, sizeof(gd_t));
 
-	printf("Relocation Offset: %08lx, fdt: %08lx\n",
-	      gd->reloc_off, (ulong)gd->new_fdt);
-	debug("Relocating to %08lx, new gd at %08lx, sp at %08lx\n",
-	      gd->relocaddr, (ulong)map_to_sysmem(gd->new_gd),
-	      gd->start_addr_sp);
-
 	return 0;
 }
 
@@ -799,20 +793,12 @@ static const init_fnc_t init_sequence_f[] = {
 	init_baud_rate,		/* initialze baudrate settings */
 	serial_init,		/* serial communications setup */
 	console_init_f,		/* stage 1 init of console */
-	display_options,	/* say that we are here */
-	display_text_info,	/* show debugging info if required */
 #if defined(CONFIG_PPC) || defined(CONFIG_M68K) || defined(CONFIG_SH) || \
 		defined(CONFIG_X86)
 	checkcpu,
 #endif
-#if defined(CONFIG_DISPLAY_CPUINFO)
-	print_cpuinfo,		/* display cpu info (and speed) */
-#endif
 #if defined(CONFIG_DTB_RESELECT)
 	embedded_dtb_select,
-#endif
-#if defined(CONFIG_DISPLAY_BOARDINFO)
-	show_board_info,
 #endif
 	INIT_FUNC_WATCHDOG_INIT
 #if defined(CONFIG_MISC_INIT_F)
@@ -825,10 +811,6 @@ static const init_fnc_t init_sequence_f[] = {
 #if defined(CONFIG_HARD_SPI)
 	init_func_spi,
 #endif
-#if defined(CONFIG_ROCKCHIP_PRELOADER_SERIAL)
-	announce_pre_serial,
-#endif
-	announce_dram_init,
 	dram_init,		/* configure available RAM banks */
 #ifdef CONFIG_POST
 	post_init_f,
@@ -875,7 +857,6 @@ static const init_fnc_t init_sequence_f[] = {
 	reserve_arch,
 	reserve_stacks,
 	dram_init_banksize,
-	show_dram_config,
 #ifdef CONFIG_SYSMEM
 	sysmem_init,		/* Validate above reserve memory */
 #endif

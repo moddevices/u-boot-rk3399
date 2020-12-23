@@ -718,7 +718,6 @@ int sysmem_init(void)
 	if (gd->flags & GD_FLG_RELOC) {
 		sysmem->has_initr = true;
 	} else {
-		SYSMEM_I("init\n");
 		sysmem->has_initf = true;
 	}
 

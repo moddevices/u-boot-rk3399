@@ -297,8 +297,6 @@ struct blk_desc *rockchip_get_bootdev(void)
 	}
 #endif
 
-	printf("PartType: %s\n", part_get_type(dev_desc));
-
 	return dev_desc;
 }
 
@@ -395,7 +393,6 @@ int rockchip_get_boot_mode(void)
 	struct blk_desc *dev_desc;
 	disk_partition_t part_info;
 	uint32_t reg_boot_mode;
-	char *env_reboot_mode;
 	int clear_boot_reg = 0;
 	int ret, cnt;
 #ifdef CONFIG_ANDROID_BOOT_IMAGE
@@ -403,25 +400,6 @@ int rockchip_get_boot_mode(void)
 #else
 	u32 bcb_offset = BOOTLOADER_MESSAGE_BLK_OFFSET;
 #endif
-
-	/*
-	 * Here, we mainly check for:
-	 * In rockchip_dnl_mode_check(), that recovery key is pressed without
-	 * USB attach will do env_set("reboot_mode", "recovery");
-	 */
-	env_reboot_mode = env_get("reboot_mode");
-	if (env_reboot_mode) {
-		if (!strcmp(env_reboot_mode, "recovery-key")) {
-			boot_mode = BOOT_MODE_RECOVERY;
-			printf("boot mode: recovery (key)\n");
-		} else if (!strcmp(env_reboot_mode, "recovery-usb")) {
-			boot_mode = BOOT_MODE_RECOVERY;
-			printf("boot mode: recovery (usb)\n");
-		} else if (!strcmp(env_reboot_mode, "fastboot")) {
-			boot_mode = BOOT_MODE_BOOTLOADER;
-			printf("boot mode: fastboot\n");
-		}
-	}
 
 	if (boot_mode != -1)
 		return boot_mode;
@@ -432,23 +410,6 @@ int rockchip_get_boot_mode(void)
 		return -ENODEV;
 	}
 
-	ret = part_get_info_by_name(dev_desc, PART_MISC, &part_info);
-	if (ret < 0) {
-		printf("%s: Could not found misc partition\n", __func__);
-		goto fallback;
-	}
-
-	cnt = DIV_ROUND_UP(sizeof(struct bootloader_message), dev_desc->blksz);
-	bmsg = memalign(ARCH_DMA_MINALIGN, cnt * dev_desc->blksz);
-	ret = blk_dread(dev_desc,
-			part_info.start + bcb_offset,
-			cnt, bmsg);
-	if (ret != cnt) {
-		free(bmsg);
-		return -EIO;
-	}
-
-fallback:
 	/*
 	 * Boot mode priority
 	 *
@@ -458,49 +419,49 @@ fallback:
 	 */
 	reg_boot_mode = readl((void *)CONFIG_ROCKCHIP_BOOT_MODE_REG);
 	if (reg_boot_mode == BOOT_LOADER) {
-		printf("boot mode: loader\n");
+		debug("boot mode: loader\n");
 		boot_mode = BOOT_MODE_LOADER;
 		clear_boot_reg = 1;
 	} else if (reg_boot_mode == BOOT_FASTBOOT) {
-		printf("boot mode: bootloader\n");
+		debug("boot mode: bootloader\n");
 		boot_mode = BOOT_MODE_BOOTLOADER;
 		clear_boot_reg = 1;
 	} else if (bmsg && !strcmp(bmsg->command, "boot-recovery")) {
-		printf("boot mode: recovery (misc)\n");
+		debug("boot mode: recovery (misc)\n");
 		boot_mode = BOOT_MODE_RECOVERY;
 		clear_boot_reg = 1;
 	} else {
 		switch (reg_boot_mode) {
 		case BOOT_NORMAL:
-			printf("boot mode: normal\n");
+			debug("boot mode: normal\n");
 			boot_mode = BOOT_MODE_NORMAL;
 			clear_boot_reg = 1;
 			break;
 		case BOOT_RECOVERY:
-			printf("boot mode: recovery (cmd)\n");
+			debug("boot mode: recovery (cmd)\n");
 			boot_mode = BOOT_MODE_RECOVERY;
 			clear_boot_reg = 1;
 			break;
 		case BOOT_UMS:
-			printf("boot mode: ums\n");
+			debug("boot mode: ums\n");
 			boot_mode = BOOT_MODE_UMS;
 			clear_boot_reg = 1;
 			break;
 		case BOOT_CHARGING:
-			printf("boot mode: charging\n");
+			debug("boot mode: charging\n");
 			boot_mode = BOOT_MODE_CHARGING;
 			clear_boot_reg = 1;
 			break;
 		case BOOT_PANIC:
-			printf("boot mode: panic\n");
+			debug("boot mode: panic\n");
 			boot_mode = BOOT_MODE_PANIC;
 			break;
 		case BOOT_WATCHDOG:
-			printf("boot mode: watchdog\n");
+			debug("boot mode: watchdog\n");
 			boot_mode = BOOT_MODE_WATCHDOG;
 			break;
 		default:
-			printf("boot mode: None\n");
+			debug("boot mode: None\n");
 			boot_mode = BOOT_MODE_UNDEFINE;
 		}
 	}
