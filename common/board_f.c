@@ -793,6 +793,7 @@ static const init_fnc_t init_sequence_f[] = {
 	init_baud_rate,		/* initialze baudrate settings */
 	serial_init,		/* serial communications setup */
 	console_init_f,		/* stage 1 init of console */
+	display_options,	/* say that we are here */
 #if defined(CONFIG_PPC) || defined(CONFIG_M68K) || defined(CONFIG_SH) || \
 		defined(CONFIG_X86)
 	checkcpu,
