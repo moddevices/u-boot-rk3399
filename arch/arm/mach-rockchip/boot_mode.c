@@ -95,7 +95,6 @@ void boot_devtype_init(void)
 	const char *devtype_num_set = "run rkimg_bootdev";
 	char *devtype = NULL, *devnum = NULL;
 	static int done = 0;
-	int atags_en = 0;
 	int ret;
 
 	if (done)
@@ -103,7 +102,6 @@ void boot_devtype_init(void)
 
 	ret = param_parse_bootdev(&devtype, &devnum);
 	if (!ret) {
-		atags_en = 1;
 		env_set("devtype", devtype);
 		env_set("devnum", devnum);
 
@@ -139,8 +137,6 @@ void boot_devtype_init(void)
 
 finish:
 	done = 1;
-	printf("Bootdev%s: %s %s\n", atags_en ? "(atags)" : "",
-	       env_get("devtype"), env_get("devnum"));
 }
 
 void rockchip_dnl_mode_check(void)

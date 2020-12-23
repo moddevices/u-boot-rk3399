@@ -99,7 +99,7 @@ void boot_fdt_add_mem_rsv_regions(struct lmb *lmb, void *fdt_blob)
 	for (i = 0; i < total; i++) {
 		if (fdt_get_mem_rsv(fdt_blob, i, &addr, &size) != 0)
 			continue;
-		printf("   reserving fdt memory region: addr=%llx size=%llx\n",
+		debug("   reserving fdt memory region: addr=%llx size=%llx\n",
 		       (unsigned long long)addr, (unsigned long long)size);
 		lmb_reserve(lmb, addr, size);
 	}
@@ -120,7 +120,7 @@ void boot_fdt_add_mem_rsv_regions(struct lmb *lmb, void *fdt_blob)
 							      &rsv_size, false);
 		if (rsv_addr == FDT_ADDR_T_NONE || !rsv_size)
 			continue;
-		printf("  'reserved-memory' %s: addr=%llx size=%llx\n",
+		debug("  'reserved-memory' %s: addr=%llx size=%llx\n",
 			fdt_get_name(fdt_blob, offset, NULL),
 			(unsigned long long)rsv_addr, (unsigned long long)rsv_size);
 		lmb_reserve(lmb, rsv_addr, rsv_size);
@@ -267,13 +267,13 @@ int boot_relocate_fdt(struct lmb *lmb, char **of_flat_tree, ulong *of_size)
 		 * for padding
 		 */
 		fdt_set_totalsize(of_start, of_len);
-		printf("   Using Device Tree in place at %p, end %p\n",
+		debug("   Using Device Tree in place at %p, end %p\n",
 		       of_start, of_start + of_len - 1);
 	} else {
 		debug("## device tree at %p ... %p (len=%ld [0x%lX])\n",
 		      fdt_blob, fdt_blob + *of_size - 1, of_len, of_len);
 
-		printf("   Loading Device Tree to %p, end %p ... ",
+		debug("   Loading Device Tree to %p, end %p ... ",
 		       of_start, of_start + of_len - 1);
 
 		err = fdt_open_into(fdt_blob, of_start, of_len);
@@ -400,7 +400,7 @@ int boot_get_fdt(int flag, int argc, char * const argv[], uint8_t arch,
 #if defined(CONFIG_IMAGE_FORMAT_LEGACY)
 		case IMAGE_FORMAT_LEGACY:
 			/* verify fdt_addr points to a valid image header */
-			printf("## Flattened Device Tree from Legacy Image at %08lx\n",
+			debug("## Flattened Device Tree from Legacy Image at %08lx\n",
 			       fdt_addr);
 			fdt_hdr = image_get_fdt(fdt_addr);
 			if (!fdt_hdr)
@@ -467,7 +467,7 @@ int boot_get_fdt(int flag, int argc, char * const argv[], uint8_t arch,
 				 * FDT blob
 				 */
 				debug("*  fdt: raw FDT blob\n");
-				printf("## Flattened Device Tree blob at %08lx\n",
+				debug("## Flattened Device Tree blob at %08lx\n",
 				       (long)fdt_addr);
 			}
 			break;
@@ -476,7 +476,7 @@ int boot_get_fdt(int flag, int argc, char * const argv[], uint8_t arch,
 			goto no_fdt;
 		}
 
-		printf("   Booting using the fdt blob at %#08lx\n", fdt_addr);
+		debug("   Booting using the fdt blob at %#08lx\n", fdt_addr);
 		fdt_blob = map_sysmem(fdt_addr, 0);
 	} else if (images->legacy_hdr_valid &&
 			image_check_type(&images->legacy_hdr_os_copy,
@@ -487,14 +487,14 @@ int boot_get_fdt(int flag, int argc, char * const argv[], uint8_t arch,
 		 * Now check if we have a legacy multi-component image,
 		 * get second entry data start address and len.
 		 */
-		printf("## Flattened Device Tree from multi component Image at %08lX\n",
+		debug("## Flattened Device Tree from multi component Image at %08lX\n",
 		       (ulong)images->legacy_hdr_os);
 
 		image_multi_getimg(images->legacy_hdr_os, 2, &fdt_data,
 				   &fdt_len);
 		if (fdt_len) {
 			fdt_blob = (char *)fdt_data;
-			printf("   Booting using the fdt at 0x%p\n", fdt_blob);
+			debug("   Booting using the fdt at 0x%p\n", fdt_blob);
 
 			if (fdt_check_header(fdt_blob) != 0) {
 				fdt_error("image is not a fdt");

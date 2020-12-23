@@ -517,7 +517,6 @@ int do_load(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
 	loff_t pos;
 	loff_t len_read;
 	int ret;
-	unsigned long time;
 	char *ep;
 
 	if (argc < 2)
@@ -557,19 +556,9 @@ int do_load(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
 	else
 		pos = 0;
 
-	time = get_timer(0);
 	ret = fs_read(filename, addr, pos, bytes, &len_read);
-	time = get_timer(time);
 	if (ret < 0)
 		return 1;
-
-	printf("%llu bytes read in %lu ms", len_read, time);
-	if (time > 0) {
-		puts(" (");
-		print_size(div_u64(len_read, time) * 1000, "/s");
-		puts(")");
-	}
-	puts("\n");
 
 	env_set_hex("fileaddr", addr);
 	env_set_hex("filesize", len_read);
