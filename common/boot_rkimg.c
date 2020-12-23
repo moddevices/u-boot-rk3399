@@ -391,15 +391,8 @@ int rockchip_get_boot_mode(void)
 {
 	struct bootloader_message *bmsg = NULL;
 	struct blk_desc *dev_desc;
-	disk_partition_t part_info;
 	uint32_t reg_boot_mode;
 	int clear_boot_reg = 0;
-	int ret, cnt;
-#ifdef CONFIG_ANDROID_BOOT_IMAGE
-	u32 bcb_offset = android_bcb_msg_sector_offset();
-#else
-	u32 bcb_offset = BOOTLOADER_MESSAGE_BLK_OFFSET;
-#endif
 
 	if (boot_mode != -1)
 		return boot_mode;
